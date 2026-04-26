@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <title>Snake Definer — Dictionary & Thesaurus</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📖</text></svg>">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
         
         :root {
             --bg: #f8fafc;
@@ -54,16 +54,17 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background: var(--bg);
             color: var(--text);
             transition: background 0.3s ease;
-            line-height: 1.5;
+            line-height: 1.6;
             min-height: 100vh;
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
         }
 
         .app {
-            padding: 2rem 1rem;
+            padding: 1.5rem 1rem;
             max-width: 600px;
             margin: 0 auto;
         }
@@ -73,13 +74,13 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
 
-        .logo-row { display: flex; align-items: center; gap: 14px; }
-        .logo-icon { width: 52px; height: 52px; border-radius: 14px; box-shadow: var(--shadow); }
-        .logo-text h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
-        .logo-text p { font-size: 12px; color: var(--text3); }
+        .logo-row { display: flex; align-items: center; gap: 12px; }
+        .logo-icon { width: 44px; height: 44px; border-radius: 12px; box-shadow: var(--shadow); }
+        .logo-text h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
+        .logo-text p { font-size: 11px; color: var(--text3); }
 
         .theme-btn {
             width: 44px;
@@ -94,7 +95,6 @@
             transition: var(--trans);
             color: var(--text2);
         }
-        .theme-btn:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
 
         /* Mode Switcher */
         .mode-pills {
@@ -102,12 +102,13 @@
             gap: 4px;
             margin-bottom: 1.5rem;
             background: var(--surface2);
-            padding: 5px;
+            padding: 4px;
             border-radius: 14px;
-            width: fit-content;
+            width: 100%; /* Wider on mobile */
         }
         .pill {
-            padding: 8px 20px;
+            flex: 1; /* Stretch buttons equally */
+            padding: 10px;
             border-radius: 10px;
             border: none;
             font-size: 14px;
@@ -115,109 +116,106 @@
             cursor: pointer;
             background: transparent;
             color: var(--text2);
-            display: flex;
-            align-items: center;
-            gap: 8px;
             transition: var(--trans);
         }
         .pill.active { background: var(--surface); color: var(--accent); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
 
         /* Search Box */
-        .search-row { display: flex; gap: 10px; margin-bottom: 1.5rem; }
+        .search-row { display: flex; flex-direction: row; gap: 10px; margin-bottom: 1.5rem; }
         .search-wrap { position: relative; flex: 1; }
-        .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: var(--text3); }
+        .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: var(--text3); pointer-events: none; }
         
         #search-input {
             width: 100%;
-            padding: 14px 14px 14px 44px;
+            padding: 14px 14px 14px 42px;
             border: 2px solid var(--border);
             border-radius: 16px;
-            font-size: 16px;
+            font-size: 16px; /* Prevents iOS zoom on focus */
             background: var(--surface);
             color: var(--text);
             outline: none;
-            transition: var(--trans);
+            appearance: none;
         }
-        #search-input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-lt); }
+        #search-input:focus { border-color: var(--accent); }
 
         #search-btn {
-            padding: 0 24px;
+            padding: 0 20px;
             background: var(--accent);
             color: #fff;
             border: none;
             border-radius: 16px;
             font-weight: 700;
             cursor: pointer;
-            transition: var(--trans);
+            font-size: 15px;
         }
-        #search-btn:hover { background: var(--accent-dk); transform: translateY(-1px); }
 
         /* Content Cards */
         .card {
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: 20px;
-            padding: 1.75rem;
+            padding: 1.25rem;
             box-shadow: var(--shadow);
             margin-bottom: 1rem;
-            animation: slideUp 0.4s ease-out;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .word-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; }
-        .word-title { font-size: 32px; font-weight: 800; letter-spacing: -1px; }
-        .word-phonetic { font-size: 15px; color: var(--accent); font-family: 'serif'; font-style: italic; margin-top: 4px; }
+        .word-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 1rem; }
+        .word-title { font-size: 28px; font-weight: 800; letter-spacing: -1px; line-height: 1.1; }
+        .word-phonetic { font-size: 15px; color: var(--accent); font-family: serif; font-style: italic; margin-top: 2px; }
 
         .listen-btn {
-            display: flex; align-items: center; gap: 8px; padding: 10px 16px;
-            border-radius: 12px; border: 1px solid var(--border);
+            white-space: nowrap;
+            padding: 8px 12px;
+            border-radius: 10px; border: 1px solid var(--border);
             background: var(--surface2); color: var(--text);
-            font-size: 14px; font-weight: 600; cursor: pointer; transition: var(--trans);
+            font-size: 13px; font-weight: 600; cursor: pointer;
         }
-        .listen-btn:hover { background: var(--accent); color: white; border-color: var(--accent); }
 
         .pos-badge {
-            display: inline-block; padding: 4px 12px; border-radius: 8px;
-            font-size: 12px; font-weight: 700; text-transform: uppercase;
-            background: var(--badge-bg); color: var(--badge-text); margin-bottom: 1rem;
+            display: inline-block; padding: 4px 10px; border-radius: 6px;
+            font-size: 11px; font-weight: 700; text-transform: uppercase;
+            background: var(--badge-bg); color: var(--badge-text); margin-bottom: 0.75rem;
         }
 
-        .definition { font-size: 16px; line-height: 1.6; margin-bottom: 1rem; color: var(--text); }
+        .definition { font-size: 15px; line-height: 1.5; margin-bottom: 0.75rem; color: var(--text); }
         
         .sentence-card {
-            background: var(--sentence-bg); border-left: 4px solid var(--accent);
-            padding: 1rem; border-radius: 0 12px 12px 0; font-style: italic; color: var(--text2);
+            background: var(--sentence-bg); border-left: 3px solid var(--accent);
+            padding: 0.75rem; border-radius: 0 10px 10px 0; font-style: italic; color: var(--text2);
+            font-size: 14px; margin-bottom: 1rem;
         }
 
         .syn-chip {
-            display: inline-block; padding: 6px 14px; border-radius: 10px;
-            border: 1px solid var(--border); margin: 0 6px 6px 0;
-            font-size: 14px; background: var(--surface); cursor: pointer; transition: var(--trans);
+            display: inline-block; padding: 8px 14px; border-radius: 10px;
+            border: 1px solid var(--border); margin: 0 4px 8px 0;
+            font-size: 14px; background: var(--surface); cursor: pointer;
         }
-        .syn-chip:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-lt); }
 
-        /* Loading & Empty States */
-        .loading { text-align: center; padding: 4rem 0; }
-        .snake-anim { font-size: 40px; animation: slither 1s infinite ease-in-out; display: inline-block; }
+        /* Loading */
+        .loading { text-align: center; padding: 3rem 0; }
+        .snake-anim { font-size: 32px; animation: slither 1s infinite ease-in-out; display: inline-block; }
         @keyframes slither {
-            0%, 100% { transform: translateX(-10px) rotate(-10deg); }
-            50% { transform: translateX(10px) rotate(10deg); }
+            0%, 100% { transform: translateX(-5px) rotate(-5deg); }
+            50% { transform: translateX(5px) rotate(5deg); }
         }
 
         .footer-strip {
-            margin-top: 3rem; text-align: center; font-size: 12px; color: var(--text3);
-            display: flex; align-items: center; justify-content: center; gap: 10px;
+            margin-top: 2rem; text-align: center; font-size: 11px; color: var(--text3);
+            display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px;
         }
-        .dot { width: 4px; height: 4px; background: var(--border); border-radius: 50%; }
+        .dot { width: 3px; height: 3px; background: var(--border); border-radius: 50%; }
 
-        .typo-notice {
-            background: var(--warn-bg); color: var(--warn-text); border: 1px solid var(--warn-border);
-            padding: 12px; border-radius: 12px; margin-bottom: 1rem; font-size: 14px;
+        @media (max-width: 400px) {
+            .search-row { flex-direction: column; }
+            #search-btn { padding: 14px; }
+            .word-title { font-size: 24px; }
         }
-        .typo-notice span { font-weight: 800; text-decoration: underline; cursor: pointer; color: var(--accent-dk); }
     </style>
 </head>
-<body class="dark"> <div class="app">
+<body class="dark"> 
+<div class="app">
     <div class="topbar">
         <div class="logo-row">
             <svg class="logo-icon" viewBox="0 0 48 48" fill="none">
@@ -230,7 +228,7 @@
                 <p>by Snake Arcade</p>
             </div>
         </div>
-        <button class="theme-btn" id="theme-btn" onclick="toggleTheme()">
+        <button class="theme-btn" id="theme-btn" onclick="toggleTheme()" aria-label="Toggle Theme">
             <svg id="theme-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="12" r="5"></circle>
                 <line x1="12" y1="1" x2="12" y2="3"></line>
@@ -253,14 +251,14 @@
     <div class="search-row">
         <div class="search-wrap">
             <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-            <input id="search-input" type="text" placeholder="Type a word..." autocomplete="off">
+            <input id="search-input" type="search" inputmode="search" placeholder="Type a word..." autocomplete="off">
         </div>
         <button id="search-btn" onclick="doSearch()">Define</button>
     </div>
 
     <div id="typo-notice" style="display:none"></div>
     <div id="result-area">
-        <div style="text-align:center; padding: 4rem 0; color: var(--text3)">
+        <div style="text-align:center; padding: 3rem 0; color: var(--text3)">
             <p>Start by searching for a word above.</p>
         </div>
     </div>
@@ -298,15 +296,19 @@
         if(input) doSearch();
     }
 
-    document.getElementById('search-input').addEventListener('keydown', e => { if(e.key === 'Enter') doSearch() });
+    document.getElementById('search-input').addEventListener('keydown', e => { 
+        if(e.key === 'Enter') {
+            doSearch();
+            document.getElementById('search-input').blur(); // Hide keyboard
+        }
+    });
 
     async function doSearch() {
         const word = document.getElementById('search-input').value.trim().toLowerCase();
         if(!word) return;
 
-        document.getElementById('result-area').innerHTML = '<div class="loading"><div class="snake-anim">🐍</div><p>Seeking knowledge...</p></div>';
-        document.getElementById('typo-notice').style.display = 'none';
-
+        document.getElementById('result-area').innerHTML = '<div class="loading"><div class="snake-anim">🐍</div><p>Seeking...</p></div>';
+        
         try {
             const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
             if(!response.ok) throw new Error('Not found');
@@ -327,19 +329,20 @@
                         <div class="word-title">${entry.word}</div>
                         <div class="word-phonetic">${entry.phonetic || ''}</div>
                     </div>
-                    <button class="listen-btn" onclick="speak('${entry.word}')">🔊 Pronounce</button>
+                    <button class="listen-btn" onclick="speak('${entry.word}')">🔊 Listen</button>
                 </div>`;
         
         entry.meanings.forEach(m => {
             html += `<span class="pos-badge">${m.partOfSpeech}</span>`;
-            m.definitions.slice(0, 2).forEach(d => {
+            m.definitions.slice(0, 3).forEach(d => {
                 html += `<div class="definition">${d.definition}</div>`;
-                if(d.example) html += `<div class="sentence-card">"${d.example}"</div><br>`;
+                if(d.example) html += `<div class="sentence-card">"${d.example}"</div>`;
             });
         });
         
         html += `</div>`;
         document.getElementById('result-area').innerHTML = html;
+        window.scrollTo({ top: 150, behavior: 'smooth' });
     }
 
     function renderThes(entry) {
@@ -351,7 +354,7 @@
             if(syns.length > 0) {
                 found = true;
                 html += `<span class="pos-badge">${m.partOfSpeech}</span><div style="margin-bottom:1.5rem">`;
-                syns.slice(0, 10).forEach(s => {
+                syns.slice(0, 12).forEach(s => {
                     html += `<span class="syn-chip" onclick="quickSearch('${s}')">${s}</span>`;
                 });
                 html += `</div>`;
@@ -361,6 +364,7 @@
         if(!found) html += `<p>No synonyms found. Try Dictionary mode.</p>`;
         html += `</div>`;
         document.getElementById('result-area').innerHTML = html;
+        window.scrollTo({ top: 150, behavior: 'smooth' });
     }
 
     function quickSearch(word) {
