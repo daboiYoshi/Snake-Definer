@@ -15,7 +15,7 @@ A sleek, minimalist, and "free forever" English Dictionary and Thesaurus web app
 
 Since **Snake Definer** is a single-file web application, you don't need to install anything.
 
-1.  Download the `snake_definer.html` file.
+1.  Download the `index.html` file.
 2.  Open it in any modern web browser (Chrome, Firefox, Safari, Edge).
 3.  Type a word and hit **Define**.
 
@@ -25,12 +25,3 @@ Since **Snake Definer** is a single-file web application, you don't need to inst
 - **Vanilla JavaScript:** ES6+ logic for API fetching and UI state management.
 - **Free Dictionary API:** Reliable backend for word definitions, phonetics, and synonyms.
 
-## 🎨 Customization
-
-The application uses a robust CSS variable system. You can easily modify the primary colors by editing the `:root` and `body.dark` blocks in the `<style>` section:
-
-```css
-:root {
-    --accent: #10b981; /* Emerald Green */
-    --bg: #f8fafc;     /* Light Slate */
-}
